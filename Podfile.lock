@@ -1,0 +1,96 @@
+PODS:
+  - Bolts (1.9.0):
+    - Bolts/AppLinks (= 1.9.0)
+    - Bolts/Tasks (= 1.9.0)
+  - Bolts/AppLinks (1.9.0):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.9.0)
+  - FacebookCore (0.3.2):
+    - Bolts (~> 1.8)
+    - FBSDKCoreKit (~> 4.35)
+  - FacebookLogin (0.3.2):
+    - Bolts (~> 1.8)
+    - FacebookCore (~> 0.3.2)
+    - FBSDKCoreKit (~> 4.35)
+    - FBSDKLoginKit (~> 4.35)
+  - FBSDKCoreKit (4.36.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.36.0):
+    - FBSDKCoreKit
+  - GoogleSignIn (4.2.0):
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+    - "GoogleToolboxForMac/NSString+URLArguments (~> 2.1)"
+    - GTMOAuth2 (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GoogleToolboxForMac/DebugUtils (2.1.4):
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - GoogleToolboxForMac/Defines (2.1.4)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.1.4)":
+    - GoogleToolboxForMac/DebugUtils (= 2.1.4)
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.1.4)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.1.4)"
+  - GTMOAuth2 (1.1.6):
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.2.0):
+    - GTMSessionFetcher/Full (= 1.2.0)
+  - GTMSessionFetcher/Core (1.2.0)
+  - GTMSessionFetcher/Full (1.2.0):
+    - GTMSessionFetcher/Core (= 1.2.0)
+  - StitchCore (4.0.5):
+    - StitchCoreSDK (~> 4.0.5)
+  - StitchCoreRemoteMongoDBService (4.0.5):
+    - StitchCoreSDK (~> 4.0.5)
+  - StitchCoreSDK (4.0.5)
+  - StitchRemoteMongoDBService (4.0.5):
+    - StitchCore (~> 4.0.5)
+    - StitchCoreRemoteMongoDBService (~> 4.0.5)
+  - StitchSDK (4.0.5):
+    - StitchSDK/StitchSDK (= 4.0.5)
+  - StitchSDK/StitchRemoteMongoDBService (4.0.5):
+    - StitchRemoteMongoDBService (~> 4.0.5)
+  - StitchSDK/StitchSDK (4.0.5):
+    - StitchSDK/StitchRemoteMongoDBService
+
+DEPENDENCIES:
+  - FacebookCore
+  - FacebookLogin
+  - GoogleSignIn
+  - StitchSDK (~> 4.0.1)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Bolts
+    - FacebookCore
+    - FacebookLogin
+    - FBSDKCoreKit
+    - FBSDKLoginKit
+    - GoogleSignIn
+    - GoogleToolboxForMac
+    - GTMOAuth2
+    - GTMSessionFetcher
+    - StitchCore
+    - StitchCoreRemoteMongoDBService
+    - StitchCoreSDK
+    - StitchRemoteMongoDBService
+    - StitchSDK
+
+SPEC CHECKSUMS:
+  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
+  FacebookCore: fe93222bb70346730ef33b061d493e9e7a7cb1f5
+  FacebookLogin: a4e225974791c82836765a294582b4778baffc07
+  FBSDKCoreKit: 3b8e6570eedb443f9fc4af196a7bf39f18e3a3d8
+  FBSDKLoginKit: 8bccb6064708ab2f4251a7fc4e3b6d8d00ad91ba
+  GoogleSignIn: 591e46382014e591269f862ba6e7bc0fbd793532
+  GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
+  GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
+  GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
+  StitchCore: 93969ed38c0777c9d12f3497a0fc37776e618ad5
+  StitchCoreRemoteMongoDBService: ea279f1595bd4bd08fd7b0154a2265cf160adbc3
+  StitchCoreSDK: c11f3f141b17f7da04bc204769355899c5de80ce
+  StitchRemoteMongoDBService: e647002187b90bafcf83b7d2d5600016f6712417
+  StitchSDK: 066c767799237d3ddf49ba702f8fdc4199e7e68e
+
+PODFILE CHECKSUM: d703d1d3f5f4ee437cd7ee8fb0b37f2f27a99568
+
+COCOAPODS: 1.5.3
