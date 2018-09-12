@@ -15,7 +15,7 @@
             <objects>
                 <tableViewController id="m51-x8-vND" customClass="TodoTableViewController" customModule="TodoStitch" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="c33-cq-61d">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
@@ -33,6 +33,15 @@
                             <outlet property="delegate" destination="m51-x8-vND" id="HRd-w5-kZx"/>
                         </connections>
                     </tableView>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="iDA-Fv-9Xh"/>
+                        <barButtonItem title="Call A Function" id="lSE-F5-lGG">
+                            <connections>
+                                <action selector="callFunction:" destination="m51-x8-vND" id="BkQ-it-d38"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Gql-FO-FOu"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="ToDo" id="ecQ-VU-oDs">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="x3T-XK-nxx">
                             <connections>
@@ -45,6 +54,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="toLogin" id="rLH-ne-Rhe"/>
                     </connections>

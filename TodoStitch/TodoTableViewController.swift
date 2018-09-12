@@ -28,7 +28,7 @@ class TodoTableViewController: UITableViewController {
     //////////////////////////////////////////////////////////////////////////////////////
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setToolbarHidden(false, animated: true)
         if !(stitchClient.auth.isLoggedIn) {
             self.performSegue(withIdentifier: "toLogin", sender: self)
         } else {
@@ -60,7 +60,9 @@ class TodoTableViewController: UITableViewController {
         itemsCollection?.find().asArray({ result in
             switch result {
             case .success(let result):
-                self.items = result
+                // HERE IS HOW TO SORT
+                self.items = result.sorted(by: {($0["name"] as! String) > ($1["name"] as! String)})
+
                 DispatchQueue.main.async{
                     self.tableView.reloadData()
                 }
@@ -72,7 +74,11 @@ class TodoTableViewController: UITableViewController {
     func addTask(taskName: String) {
         var itemDoc = Document()
         itemDoc["name"] = taskName
-        itemDoc["owner_name"] = stitchClient.auth.currentUser?.profile.name! as! String
+        
+        // only necessary if we dont have access to their name
+        if let userName = stitchClient.auth.currentUser?.profile.name {
+            itemDoc["owner_name"] = userName
+        }
         itemDoc["owner_id"] = stitchClient.auth.currentUser!.id
         itemDoc["completed"] = false
         self.itemsCollection?.insertOne(itemDoc, {result in
@@ -115,12 +121,29 @@ class TodoTableViewController: UITableViewController {
         })
     }
     
+    func callCustomFunction(withName: String) {
+        stitchClient.callFunction(withName: "getSecretValue", withArgs: ["args"], withRequestTimeout: 5.0)
+        {(result: StitchResult<String>) in
+            switch result {
+            case .success(let stringResult):
+                let secretAlert = UIAlertController(title: "Secret Message: \(stringResult)", message: "This secret was found using stitch values and functions", preferredStyle: .alert)
+                secretAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                self.present(secretAlert, animated: true, completion: nil)
+            case .failure(let error):
+                print("Error retrieving String: \(String(describing: error))")
+            }
+        }
+    }
+    
     
     //////////////////////////////////////////////////////////////////////////////////////
     // MARK: UI Methods
     //                                  UI METHODS
     //
     //////////////////////////////////////////////////////////////////////////////////////
+    @IBAction func callFunction(_ sender: Any) {
+        callCustomFunction(withName: "secretFunction")
+    }
     @IBAction func logoutPressed(_ sender: Any) {
         stitchClient.auth.logout({result in
             switch result {
@@ -210,7 +233,8 @@ class TodoTableViewController: UITableViewController {
         }))
         
         alertController.addTextField(configurationHandler: { (textField) -> Void in
-            textField.placeholder = "Buy Groceries..."
+            let doc = self.items[indexPath.row]
+            textField.placeholder = doc["name"] as! String ?? "Groceries..."
         })
         
         self.present(alertController, animated: true, completion: nil)
