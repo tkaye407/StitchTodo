@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E188EE7214AE0710028F412 /* TodoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E188EE6214AE0710028F412 /* TodoModel.swift */; };
 		1E1C1E2321470B1A0068851E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1C1E2221470B1A0068851E /* LoginViewController.swift */; };
 		1E1C1E2521470B2A0068851E /* TodoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1C1E2421470B2A0068851E /* TodoTableViewController.swift */; };
 		1EA5F0952142EF5500078D9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA5F0942142EF5500078D9F /* AppDelegate.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E188EE6214AE0710028F412 /* TodoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoModel.swift; sourceTree = "<group>"; };
 		1E1C1E2221470B1A0068851E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1E1C1E2421470B2A0068851E /* TodoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTableViewController.swift; sourceTree = "<group>"; };
 		1EA5F0912142EF5500078D9F /* TodoStitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoStitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +135,7 @@
 				1EA5F0982142EF5500078D9F /* Main.storyboard */,
 				1E1C1E2221470B1A0068851E /* LoginViewController.swift */,
 				1E1C1E2421470B2A0068851E /* TodoTableViewController.swift */,
+				1E188EE6214AE0710028F412 /* TodoModel.swift */,
 				1EA5F09B2142EF5600078D9F /* Assets.xcassets */,
 				1EA5F09D2142EF5600078D9F /* LaunchScreen.storyboard */,
 				1EA5F0A02142EF5600078D9F /* Info.plist */,
@@ -426,6 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E1C1E2321470B1A0068851E /* LoginViewController.swift in Sources */,
+				1E188EE7214AE0710028F412 /* TodoModel.swift in Sources */,
 				1E1C1E2521470B2A0068851E /* TodoTableViewController.swift in Sources */,
 				1EA5F0952142EF5500078D9F /* AppDelegate.swift in Sources */,
 			);

@@ -15,7 +15,7 @@ import StitchRemoteMongoDBService
 
 class TodoTableViewController: UITableViewController {
     // Variables for Stitch CRUD
-    private var items: [Document] = []
+    private var items: [TodoItem] = []
     private lazy var stitchClient = Stitch.defaultAppClient!
     private var mongoClient: RemoteMongoClient?
     private var itemsCollection: RemoteMongoCollection<Document>?
@@ -58,16 +58,8 @@ class TodoTableViewController: UITableViewController {
     
     // Insert a new task to the database with the relevant information and then reload the data
     func addTask(taskName: String) {
-        var itemDoc = Document()
-        itemDoc["name"] = taskName
-        
-        // only necessary if we dont have access to their name (Facebook / Google)
-        if let userName = stitchClient.auth.currentUser?.profile.name {
-            itemDoc["owner_name"] = userName
-        }
-        itemDoc["owner_id"] = stitchClient.auth.currentUser!.id
-        itemDoc["completed"] = false
-        self.itemsCollection?.insertOne(itemDoc, {result in
+        let newDoc = TodoItem.newDocumentForTask(taskName: taskName)
+        self.itemsCollection?.insertOne(newDoc, {result in
             switch result {
             case .success(_):
                 self.getTasks()
@@ -82,8 +74,13 @@ class TodoTableViewController: UITableViewController {
         itemsCollection?.find().asArray({ result in
             switch result {
             case .success(let results):
-                // HERE IS HOW TO SORT
-                self.items = results.sorted(by: {($0["name"] as! String) > ($1["name"] as! String)})
+                var newItems: [TodoItem] = []
+                for doc in results {
+                    if let item = TodoItem(document: doc) {
+                        newItems.append(item)
+                    }
+                }
+                self.items = newItems.sorted()
 
                 DispatchQueue.main.async{
                     self.tableView.reloadData()
@@ -95,12 +92,9 @@ class TodoTableViewController: UITableViewController {
     }
     
     // Update the current task's name and then reload the data
-    func updateTaskAtRow(row: Int, newTask: String) {
-        var filter: Document = Document()
-        filter["_id"] = (items[row])["_id"] as! ObjectId
-        
-        var update: Document = Document()
-        update["$set"] = Document(["name": newTask])
+    func updateTaskAtRow(row: Int, newTaskName: String) {
+        let filter: Document = Document([TodoItem.Keys.objectIdKey: items[row].objectID])
+        let update: Document = Document(["$set": Document([TodoItem.Keys.nameKey: newTaskName])])
         
         itemsCollection?.updateOne(filter: filter, update: update, {result in
             switch result {
@@ -114,8 +108,7 @@ class TodoTableViewController: UITableViewController {
     
     // Delete the current task from the database and then reload the data
     func deleteTaskAtRow(row: Int) {
-        var filter: Document = Document()
-        filter["_id"] = (items[row])["_id"] as! ObjectId
+        let filter: Document = Document([TodoItem.Keys.objectIdKey: items[row].objectID])
         itemsCollection?.deleteOne(filter, {result in
             switch result {
             case .success(_):
@@ -214,13 +207,13 @@ class TodoTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(items.count)
         return items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "todoItemCell", for: indexPath)
-        let currItem: Document = items[indexPath.row]
-        cell.textLabel?.text = currItem["name"] as? String
+        cell.textLabel?.text = items[indexPath.row].taskName
         return cell
     }
     
@@ -231,7 +224,7 @@ class TodoTableViewController: UITableViewController {
             alert -> Void in
             let taskName = alertController.textFields![0] as UITextField
             if taskName.text != "" {
-                self.updateTaskAtRow(row: indexPath.row, newTask: taskName.text!)
+                self.updateTaskAtRow(row: indexPath.row, newTaskName: taskName.text!)
             } else {
                 let errorAlert = UIAlertController(title: "Error", message: "Please input a task name", preferredStyle: .alert)
                 errorAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: {
@@ -243,8 +236,8 @@ class TodoTableViewController: UITableViewController {
         }))
         
         alertController.addTextField(configurationHandler: { (textField) -> Void in
-            let doc = self.items[indexPath.row]
-            textField.placeholder = doc["name"] as! String ?? "Groceries..."
+            let todoItem = self.items[indexPath.row]
+            textField.placeholder = todoItem.taskName
         })
         
         self.present(alertController, animated: true, completion: nil)
