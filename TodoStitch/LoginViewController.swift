@@ -35,21 +35,15 @@ class LoginViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDeleg
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         
-        // Do any additional setup after loading the view.
-        // UI Setup for Facebook Button
+        // Google UI Setup
+        let googleSignInButton = GIDSignInButton()
+        loginStack.addArrangedSubview(googleSignInButton)
+        
+        // Facebook UI Setup
         let facebookLoginButton = LoginButton(readPermissions: [ .publicProfile, .email])
         facebookLoginButton.delegate = self
         loginStack.addArrangedSubview(facebookLoginButton)
-        
-        // UI Setup for Google Button
-        let googleSignInButton = GIDSignInButton()
-        loginStack.addArrangedSubview(googleSignInButton)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
-    
     
     //////////////////////////////////////////////////////////////////////////////////////
     //
@@ -130,16 +124,4 @@ class LoginViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDeleg
             }
         }
     }
-    
-
-    //////////////////////////////////////////////////////////////////////////////////////
-    //
-    //                               iOS METHODS
-    //
-    //////////////////////////////////////////////////////////////////////////////////////
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 }

@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import FacebookLogin
-import FacebookCore
-import GoogleSignIn
 import StitchCore
+import FacebookCore   // If Using Facebook Login
+import GoogleSignIn   // If using Google Login
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

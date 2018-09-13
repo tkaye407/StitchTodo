@@ -28,54 +28,40 @@ class TodoTableViewController: UITableViewController {
     //////////////////////////////////////////////////////////////////////////////////////
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.setToolbarHidden(false, animated: true)
+        self.tableView.allowsMultipleSelectionDuringEditing = false
+        
+        // If stitch is currently not logged in --> segue back to the login page
         if !(stitchClient.auth.isLoggedIn) {
             self.performSegue(withIdentifier: "toLogin", sender: self)
         } else {
+            // If stitch is logged in, let the LoginViewController know which provider is logged in
             LoginViewController.provider = stitchClient.auth.currentUser?.loggedInProviderType
         }
+        
+        // Set the stitch variables declared above for use below
         mongoClient = stitchClient.serviceClient(fromFactory: remoteMongoClientFactory, withName: "mongodb-atlas")
         itemsCollection = mongoClient?.db("todo").collection("items")
-        
-        self.tableView.allowsMultipleSelectionDuringEditing = false
     }
     
+    // In viewWillAppear call getTasks() to performa find() on the database
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getTasks()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     
     //////////////////////////////////////////////////////////////////////////////////////
     // MARK: Stitch CRUD
-    //                          STITCH CRUD METHODS
+    //                          STITCH Functionality
     //
     //////////////////////////////////////////////////////////////////////////////////////
-    func getTasks() {
-        itemsCollection?.find().asArray({ result in
-            switch result {
-            case .success(let result):
-                // HERE IS HOW TO SORT
-                self.items = result.sorted(by: {($0["name"] as! String) > ($1["name"] as! String)})
-
-                DispatchQueue.main.async{
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                print("Error in finding documents: \(error)")
-            }
-        })
-    }
+    
+    // Insert a new task to the database with the relevant information and then reload the data
     func addTask(taskName: String) {
         var itemDoc = Document()
         itemDoc["name"] = taskName
         
-        // only necessary if we dont have access to their name
+        // only necessary if we dont have access to their name (Facebook / Google)
         if let userName = stitchClient.auth.currentUser?.profile.name {
             itemDoc["owner_name"] = userName
         }
@@ -91,19 +77,24 @@ class TodoTableViewController: UITableViewController {
         })
     }
     
-    func deleteTaskAtRow(row: Int) {
-        var filter: Document = Document()
-        filter["_id"] = (items[row])["_id"] as! ObjectId
-        itemsCollection?.deleteOne(filter, {result in
+    // Read all of the items from the database and then reload the UI
+    func getTasks() {
+        itemsCollection?.find().asArray({ result in
             switch result {
-            case .success(_):
-                self.getTasks()
+            case .success(let results):
+                // HERE IS HOW TO SORT
+                self.items = results.sorted(by: {($0["name"] as! String) > ($1["name"] as! String)})
+
+                DispatchQueue.main.async{
+                    self.tableView.reloadData()
+                }
             case .failure(let error):
-                print("Failed to delete document: \(error)")
+                print("Error in finding documents: \(error)")
             }
         })
     }
     
+    // Update the current task's name and then reload the data
     func updateTaskAtRow(row: Int, newTask: String) {
         var filter: Document = Document()
         filter["_id"] = (items[row])["_id"] as! ObjectId
@@ -121,6 +112,21 @@ class TodoTableViewController: UITableViewController {
         })
     }
     
+    // Delete the current task from the database and then reload the data
+    func deleteTaskAtRow(row: Int) {
+        var filter: Document = Document()
+        filter["_id"] = (items[row])["_id"] as! ObjectId
+        itemsCollection?.deleteOne(filter, {result in
+            switch result {
+            case .success(_):
+                self.getTasks()
+            case .failure(let error):
+                print("Failed to delete document: \(error)")
+            }
+        })
+    }
+    
+    // Execute a stitch function call request
     func callCustomFunction(withName: String) {
         stitchClient.callFunction(withName: "getSecretValue", withArgs: ["args"], withRequestTimeout: 5.0)
         {(result: StitchResult<String>) in
@@ -135,16 +141,8 @@ class TodoTableViewController: UITableViewController {
         }
     }
     
-    
-    //////////////////////////////////////////////////////////////////////////////////////
-    // MARK: UI Methods
-    //                                  UI METHODS
-    //
-    //////////////////////////////////////////////////////////////////////////////////////
-    @IBAction func callFunction(_ sender: Any) {
-        callCustomFunction(withName: "secretFunction")
-    }
-    @IBAction func logoutPressed(_ sender: Any) {
+    // Logout from Stitch and send the user back to the sign in page
+    func logout() {
         stitchClient.auth.logout({result in
             switch result {
             case .success:
@@ -166,11 +164,23 @@ class TodoTableViewController: UITableViewController {
         })
     }
     
+    
+    //////////////////////////////////////////////////////////////////////////////////////
+    // MARK: UI Methods
+    //                                  UI METHODS
+    //
+    //////////////////////////////////////////////////////////////////////////////////////
+    @IBAction func callFunction(_ sender: Any) {
+        callCustomFunction(withName: "secretFunction")
+    }
+    
+    @IBAction func logoutPressed(_ sender: Any) {
+        logout()
+    }
+    
     @IBAction func addItemPressed(_ sender: Any) {
         let alertController = UIAlertController(title: "New Task", message: "Enter Task Description", preferredStyle: .alert)
-        
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
         alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: {
             alert -> Void in
             let taskName = alertController.textFields![0] as UITextField
@@ -244,43 +254,7 @@ class TodoTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             deleteTaskAtRow(row: indexPath.row)
-//        } else if editingStyle == .insert {
-//            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }
     }
-    
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
- 
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
