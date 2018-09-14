@@ -23,12 +23,13 @@ class TodoTableViewController: UITableViewController {
  
     //////////////////////////////////////////////////////////////////////////////////////
     // MARK: View Setup
-    //                                  VIEW SETUP METHODS
+    //                            VIEW SETUP METHODS / IBActions
     //
     //////////////////////////////////////////////////////////////////////////////////////
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.allowsMultipleSelectionDuringEditing = false
+        self.navigationController?.setToolbarHidden(false, animated: false)
         
         // If stitch is currently not logged in --> segue back to the login page
         if !(stitchClient.auth.isLoggedIn) {
@@ -49,13 +50,46 @@ class TodoTableViewController: UITableViewController {
         getTasks()
     }
     
+    @IBAction func callFunction(_ sender: Any) {
+        callCustomFunction(withName: "secretFunction")
+    }
     
-    //////////////////////////////////////////////////////////////////////////////////////
-    // MARK: Stitch CRUD
-    //                          STITCH Functionality
-    //
-    //////////////////////////////////////////////////////////////////////////////////////
+    @IBAction func logoutPressed(_ sender: Any) {
+        logout()
+    }
     
+    @IBAction func addItemPressed(_ sender: Any) {
+        let alertController = UIAlertController(title: "New Task", message: "Enter Task Description", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: {
+            alert -> Void in
+            let taskName = alertController.textFields![0] as UITextField
+            if taskName.text != "" {
+                self.addTask(taskName: taskName.text!)
+            } else {
+                let errorAlert = UIAlertController(title: "Error", message: "Please input a task name", preferredStyle: .alert)
+                errorAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: {
+                    alert -> Void in
+                    self.present(alertController, animated: true, completion: nil)
+                }))
+                self.present(errorAlert, animated: true, completion: nil)
+            }
+        }))
+        
+        alertController.addTextField(configurationHandler: { (textField) -> Void in
+            textField.placeholder = "Buy Groceries..."
+        })
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+// MARK: Stitch CRUD
+//                          STITCH Functionality
+//
+//////////////////////////////////////////////////////////////////////////////////////
+extension TodoTableViewController {
     // Insert a new task to the database with the relevant information and then reload the data
     func addTask(taskName: String) {
         let newDoc = TodoItem.newDocumentForTask(taskName: taskName)
@@ -81,7 +115,7 @@ class TodoTableViewController: UITableViewController {
                     }
                 }
                 self.items = newItems.sorted()
-
+                
                 DispatchQueue.main.async{
                     self.tableView.reloadData()
                 }
@@ -156,52 +190,14 @@ class TodoTableViewController: UITableViewController {
             }
         })
     }
-    
-    
-    //////////////////////////////////////////////////////////////////////////////////////
-    // MARK: UI Methods
-    //                                  UI METHODS
-    //
-    //////////////////////////////////////////////////////////////////////////////////////
-    @IBAction func callFunction(_ sender: Any) {
-        callCustomFunction(withName: "secretFunction")
-    }
-    
-    @IBAction func logoutPressed(_ sender: Any) {
-        logout()
-    }
-    
-    @IBAction func addItemPressed(_ sender: Any) {
-        let alertController = UIAlertController(title: "New Task", message: "Enter Task Description", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: {
-            alert -> Void in
-            let taskName = alertController.textFields![0] as UITextField
-            if taskName.text != "" {
-                self.addTask(taskName: taskName.text!)
-            } else {
-                let errorAlert = UIAlertController(title: "Error", message: "Please input a task name", preferredStyle: .alert)
-                errorAlert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: {
-                    alert -> Void in
-                    self.present(alertController, animated: true, completion: nil)
-                }))
-                self.present(errorAlert, animated: true, completion: nil)
-            }
-        }))
-        
-        alertController.addTextField(configurationHandler: { (textField) -> Void in
-            textField.placeholder = "Buy Groceries..."
-        })
-        
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    
-    //////////////////////////////////////////////////////////////////////////////////////
-    // MARK: - Tableview
-    //                                 TABLEVIEW METHODS
-    //
-    //////////////////////////////////////////////////////////////////////////////////////
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+// MARK: - Tableview
+//                                 TABLEVIEW METHODS
+//
+//////////////////////////////////////////////////////////////////////////////////////
+extension TodoTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -249,5 +245,4 @@ class TodoTableViewController: UITableViewController {
             deleteTaskAtRow(row: indexPath.row)
         }
     }
-
 }

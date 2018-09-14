@@ -106,6 +106,42 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		1E9909CC214C047600892329 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1E1C1E2421470B2A0068851E /* TodoTableViewController.swift */,
+				1E1C1E2221470B1A0068851E /* LoginViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1E9909CD214C047B00892329 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1E9909CE214C047D00892329 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1E188EE6214AE0710028F412 /* TodoModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1E9909CF214C049300892329 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				1EA5F0A02142EF5600078D9F /* Info.plist */,
+				1EA5F0942142EF5500078D9F /* AppDelegate.swift */,
+				1EA5F09D2142EF5600078D9F /* LaunchScreen.storyboard */,
+				1EA5F09B2142EF5600078D9F /* Assets.xcassets */,
+				1EA5F0982142EF5500078D9F /* Main.storyboard */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
 		1EA5F0882142EF5500078D9F = {
 			isa = PBXGroup;
 			children = (
@@ -131,14 +167,10 @@
 		1EA5F0932142EF5500078D9F /* TodoStitch */ = {
 			isa = PBXGroup;
 			children = (
-				1EA5F0942142EF5500078D9F /* AppDelegate.swift */,
-				1EA5F0982142EF5500078D9F /* Main.storyboard */,
-				1E1C1E2221470B1A0068851E /* LoginViewController.swift */,
-				1E1C1E2421470B2A0068851E /* TodoTableViewController.swift */,
-				1E188EE6214AE0710028F412 /* TodoModel.swift */,
-				1EA5F09B2142EF5600078D9F /* Assets.xcassets */,
-				1EA5F09D2142EF5600078D9F /* LaunchScreen.storyboard */,
-				1EA5F0A02142EF5600078D9F /* Info.plist */,
+				1E9909CE214C047D00892329 /* Models */,
+				1E9909CD214C047B00892329 /* Views */,
+				1E9909CC214C047600892329 /* Controllers */,
+				1E9909CF214C049300892329 /* SupportingFiles */,
 			);
 			path = TodoStitch;
 			sourceTree = "<group>";
@@ -607,7 +639,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T8YB9L4SM5;
-				INFOPLIST_FILE = TodoStitch/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/TodoStitch/SupportingFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -626,7 +658,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T8YB9L4SM5;
-				INFOPLIST_FILE = TodoStitch/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/TodoStitch/SupportingFiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
